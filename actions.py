@@ -8,11 +8,13 @@ class Actions():
 
     def set_waypoint(self,waypoint):
         with self.client as client:
-            client.run(f"/c remote.call('actions','set_waypoints',1,{self.player_id},{waypoint})")
+            client.run(f"/c remote.call('actions','set_waypoints',{self.player_id},{waypoint})")
 
 
-    def set_mining_target(self,name,pos):
+    def set_mining_target(self,entity_name,pos):
         with self.client as client:
-            client.run(f"remote.call('actions','mining_target',{self.player_id},{name},{pos}")
+            client.run(f"remote.call('actions','mining_target',{self.player_id},{entity_name},{pos}")
 
-    # def insert_to_inventory(self,name,)
+    def insert_to_inventory(self,entity_name,pos,item_name):
+         with self.client as client:
+            client.run(f"/c remote.call('actions','insert_to_inventory',{self.player_id},{entity_name},{pos},{item2inventory_type[item]}{item_name})")
