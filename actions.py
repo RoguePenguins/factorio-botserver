@@ -1,4 +1,5 @@
 from rcon.source import Client
+import json 
 
 class Actions():
     def __init__(self,player_id):
@@ -8,13 +9,25 @@ class Actions():
 
     def set_waypoint(self,waypoint):
         with self.client as client:
-            client.run(f"/c remote.call('actions','set_waypoints',{self.player_id},{waypoint})")
+            client.run(f"/c remote.call('actions','move',{waypoint})")
 
 
     def set_mining_target(self,entity_name,pos):
         with self.client as client:
             client.run(f"remote.call('actions','mining_target',{self.player_id},{entity_name},{pos}")
 
-    # def insert_to_inventory(self,entity_name,pos,item_name):
-    #      with self.client as client:
-    #         client.run(f"/c remote.call('actions','insert_to_inventory',{self.player_id},{entity_name},{pos},{item2inventory_type[item]}{item_name})")
+    # parses json input into rcon call
+
+    ## schema
+    # [{action: [params]}]
+    ## 
+    def parse(self, json_str):
+        tasks = json.loads(json_str)
+
+        for task in tasks:
+            for action, params in task.items():
+                if action == "move":
+                    self.set_waypoint(**params)
+                elif action == "mining_target":
+                    self.set_mining_target(**params)
+                # Add more actions here as needed        
